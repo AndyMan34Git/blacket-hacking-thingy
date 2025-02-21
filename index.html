@@ -1,21 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Blacket Control Panel</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blacket Hacking Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #1e1e1e;
+            color: white;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #status {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h1>Send JavaScript</h1>
-    <textarea id="jsCode" placeholder="Enter JS code..."></textarea>
-    <button onclick="sendCode()">Send</button>
+    <h1>Blacket Hacking Client</h1>
+    <p>Select a hack to execute on Blacket.</p>
+
+    <div class="button-container">
+        <button onclick="sendCode('console.log(\\'Hello from Vercel!\\')')">Log Message</button>
+        <button onclick="sendCode('alert(\\'You activated an alert!\\')')">Show Alert</button>
+        <button onclick="sendCode('document.body.style.backgroundColor=\\'red\\'')">Change Background</button>
+        <button onclick="sendCode('console.clear()')">Clear Console</button>
+        <button onclick="sendCode('')">Clear Code</button>
+    </div>
+
+    <p id="status"></p>
 
     <script>
-        function sendCode() {
-            let code = document.getElementById("jsCode").value;
-            fetch("https://blacket-hacking-thingy.vercel.app/api/send", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ code })
-            });
+        async function sendCode(code) {
+            try {
+                let response = await fetch("/api/send", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ code })
+                });
+                let data = await response.json();
+                document.getElementById("status").textContent = code ? "Code sent successfully!" : "Code cleared!";
+            } catch (error) {
+                document.getElementById("status").textContent = "Error sending code!";
+                console.error("Error:", error);
+            }
         }
     </script>
 </body>
